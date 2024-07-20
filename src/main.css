@@ -1,0 +1,201 @@
+body {
+	margin: 0;
+	color: #333;
+}
+form {
+	margin: 10px auto;
+}
+label{
+	margin:0 0 4px 0;
+	padding:0px;
+	display: block;
+	font-weight: bold;
+}
+input{
+	box-sizing: border-box;
+	border:1px solid #BEBEBE;
+	border-radius: 4px;
+	padding: 8px;
+	margin:0px;
+	transition: all 0.30s ease-in-out;
+	outline: none;	
+}
+input:focus{
+	box-shadow: 0 0 8px #88D5E9;
+	border: 1px solid #88D5E9;
+}
+input:not(:placeholder-shown):invalid {
+	border: 1px solid red;
+}
+select {
+	width: 105px;
+	border-radius: 3px;
+  padding: 1px;
+}
+[type=submit], #logout{
+	padding: 8px;
+	border: none;
+	border-radius: 4px;
+	background: #4B99AD;
+	color: #fff;
+	font-size: 15px;
+	font-weight: bold;
+}
+[type=submit]:hover {
+	background: #4691A4;
+}
+.required::after {
+	content: '*';
+	color: red;
+}
+form > button, input{
+	width: 100%;
+}
+input[type=search] {
+	width: 150px;
+  padding-left: 20px;
+}
+form .field {
+	margin-top: 10px;
+}
+table {
+  border-collapse: collapse;
+  border-radius: 4px;
+  width: 100%;
+}
+td, th {
+	border: 1px solid #a1a1a1;
+	padding: 8px;
+}
+.table-wrapper {
+	width: 100%;
+	overflow-x: auto;
+}
+ul[role=navigation] {
+	list-style-type: none;
+	height: 50px;
+	margin: 0 0 2rem 0;
+	padding: 0 50px;
+	background-color: #85ad83;
+}
+main {
+	width: 60%;
+	min-width: 360px;
+	margin: auto;
+}
+details {
+  border: 1px solid #a1a1a1;
+  border-radius: 4px;
+  padding: 0.5em 0.5em 0;
+}
+details[open] {
+  padding: 0.5em;
+}
+summary {
+	margin: -0.5em -0.5em 0;
+  padding: 0.5em;
+}
+button:disabled, button:disabled:hover{
+	background: #999
+}
+.modal, .modal-background {
+	position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.modal-background {
+	background: #fff;
+  width: 100vw;
+  height: 100vh;
+}
+.modal {
+  padding: 14px;
+  border: 1px solid #a1a1a1;
+  border-radius: 8px;
+  box-shadow: 4px 5px 8px 0px rgba(0,0,0,0.78);
+  background-color: #cad4a5;
+}
+.modal [type=submit] {
+	width: 320px;
+	margin: 30px 0 0 0;
+}
+.close {
+	position: absolute;
+	top: 8px;
+  right: 16px;
+  cursor: pointer;
+}
+h1 {
+	margin: 36px 0 36px -28px;
+	position: relative;
+	color: #0d4c0b;
+}
+h1::after {
+  content: url("./book.svg");
+  position: absolute;
+	margin-left: 13px;
+	fill: #0d4c0b;
+}
+.flex {
+	display: flex;
+}
+.space-around {
+	justify-content: space-around;
+}
+.space-between {
+	justify-content: space-between;
+}
+.align-c {
+	align-items: center;
+}
+.txt-c {
+	text-align: center;
+}
+.no-wrap {
+	white-space: nowrap;
+}
+.rounded {
+	margin: 5px;
+	border-radius: 50%;
+	border: none;
+	background: #fff;
+	box-shadow: 0 2px 3px #aaa;
+}
+.button-wrapper {
+	padding-left: 10px;
+}
+.danger {
+	font-weight: bold;
+	color: #920606;
+}
+#login {	
+	max-width: 400px;
+}
+#login button {
+	margin-top: 24px;
+}
+#logout {
+	width: 82px;
+}
+#logout:hover {
+	background: #cd5144;
+}
+#searchButton {
+	width: 160px;
+	margin: 0 0 0 14px;
+}
+#avatar {
+	border: none;
+	border-radius: 50%;
+	margin-right: 10px;
+  padding-top: 4px;
+}
+[for=selectedTable] {
+	width: 100%;
+	margin-bottom: 1.5rem;
+}
+[for=order] {
+	margin: 1.6rem auto;
+}
+   
