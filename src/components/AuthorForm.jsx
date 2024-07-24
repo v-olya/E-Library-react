@@ -1,19 +1,30 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 import { dateRegEx, nameRegEx } from "../helpers/constants.js";
-import { handleAddEditSubmit } from "../helpers/functions.js";
+import { handleC_UDsubmit } from "../helpers/functions.js";
 
 export const AuthorForm = ({ id, list, setList, hideModal }) => {
   const method = id ? "PUT" : "POST";
   const record = id ? list.find((x) => x.id == id) : {};
-  const [disabled, setDisabled] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setDisabled(true);
-    setMessage(handleAddEditSubmit(e, method, list, setList, hideModal));
-  }
+    setSubmitting(true);
+    const form = e.target;
+    const m = await handleC_UDsubmit(
+      form.id,
+      method,
+      form.elements["ID"].value,
+      list,
+      setList,
+      new FormData(form),
+    );
+    if (m) {
+      setMessage(m);
+    }
+  };
 
   return (
     <div className="modal-background">
@@ -21,9 +32,7 @@ export const AuthorForm = ({ id, list, setList, hideModal }) => {
         <h3 className="txt-c">
           {!id ? "Add an author" : `Editing item no. ${id}`}
         </h3>
-        { !!message && disabled && <h4 className="danger txt-c">
-          {message}
-        </h4>}
+        <h4 className="danger txt-c">{submitting && message}&nbsp;</h4>
         <b className="close" onClick={hideModal}>
           &#10006;
         </b>
@@ -40,7 +49,7 @@ export const AuthorForm = ({ id, list, setList, hideModal }) => {
             pattern={nameRegEx}
             placeholder=" "
             defaultValue={record.first_name}
-            onChange={()=>setDisabled(false)}
+            onChange={() => setSubmitting(false)}
           />
         </div>
         <div className="field">
@@ -56,7 +65,7 @@ export const AuthorForm = ({ id, list, setList, hideModal }) => {
             pattern={nameRegEx}
             placeholder=" "
             defaultValue={record.last_name}
-            onChange={()=>setDisabled(false)}
+            onChange={() => setSubmitting(false)}
           />
         </div>
         <div className="field">
@@ -71,11 +80,13 @@ export const AuthorForm = ({ id, list, setList, hideModal }) => {
             pattern={dateRegEx}
             placeholder="YYYY-MM-DD"
             defaultValue={record.birth_date}
-            onChange={()=>setDisabled(false)}
+            onChange={() => setSubmitting(false)}
           />
           <input type="hidden" name="ID" readOnly value={record.id} />
         </div>
-        <button type="submit" disabled={disabled}>Submit</button>
+        <button type="submit" disabled={submitting}>
+          Submit
+        </button>
       </form>
     </div>
   );

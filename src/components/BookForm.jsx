@@ -1,19 +1,30 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 import { dateRegEx, titleRegEx } from "../helpers/constants.js";
-import { handleAddEditSubmit } from "../helpers/functions.js";
+import { handleC_UDsubmit } from "../helpers/functions.js";
 
 export const BookForm = ({ id, list, setList, hideModal }) => {
   const method = id ? "PUT" : "POST";
   const record = id ? list.find((x) => x.id == id) : {};
+  const [submitting, setSubmitting] = useState("");
   const [message, setMessage] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage(handleAddEditSubmit(e, method, list, setList, hideModal));
-    setDisabled(true);
-  }
-
+    setSubmitting(true);
+    const form = e.target;
+    const m = await handleC_UDsubmit(
+      form.id,
+      method,
+      form.elements["ID"].value,
+      list,
+      setList,
+      new FormData(form),
+    );
+    if (m) {
+      setMessage(m);
+    }
+  };
 
   const author_ids = record.authors
     ? record.authors
@@ -28,9 +39,7 @@ export const BookForm = ({ id, list, setList, hideModal }) => {
         <h3 className="txt-c">
           {!id ? "Add a new book" : `Editing item no. ${id}`}
         </h3>
-        <h4 className="danger txt-c">
-          {message}
-        </h4>
+        <h4 className="danger txt-c">{submitting && message}&nbsp;</h4>
         <b className="close" onClick={hideModal}>
           &#10006;
         </b>
@@ -47,7 +56,7 @@ export const BookForm = ({ id, list, setList, hideModal }) => {
             pattern={titleRegEx}
             placeholder=" "
             defaultValue={record.title}
-            onChange={()=>setDisabled(false)}
+            onChange={() => setSubmitting(false)}
           />
         </div>
         <div className="field">
@@ -62,7 +71,7 @@ export const BookForm = ({ id, list, setList, hideModal }) => {
             pattern="^\d{1,13}$"
             placeholder="Up to 13 digits"
             defaultValue={record.isbn}
-            onChange={()=>setDisabled(false)}
+            onChange={() => setSubmitting(false)}
           />
         </div>
         <div className="field">
@@ -77,7 +86,7 @@ export const BookForm = ({ id, list, setList, hideModal }) => {
             pattern={dateRegEx}
             placeholder="YYYY-MM-DD"
             defaultValue={record.publication_date}
-            onChange={()=>setDisabled(false)}
+            onChange={() => setSubmitting(false)}
           />
         </div>
         <div className="field">
@@ -92,11 +101,13 @@ export const BookForm = ({ id, list, setList, hideModal }) => {
             pattern="^[1-9](\d*)(,[1-9](\d*))*$"
             placeholder="1 or 1,2,3"
             defaultValue={author_ids}
-            onChange={()=>setDisabled(false)}
+            onChange={() => setSubmitting(false)}
           />
           <input type="hidden" name="ID" readOnly value={record.id} />
         </div>
-        <button type="submit">Submit</button>
+        <button type="submit" disabled={submitting}>
+          Submit
+        </button>
       </form>
     </div>
   );

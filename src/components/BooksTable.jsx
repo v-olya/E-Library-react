@@ -5,14 +5,21 @@ import { Add } from "./actions/Add";
 import { Edit } from "./actions/Edit";
 import { Delete } from "./actions/Delete";
 import { BookForm } from "./BookForm";
-import { handleCUDsubmit } from "../helpers/functions.js";
+import { handleC_UDsubmit } from "../helpers/functions.js";
 
 export const BooksTable = ({ list, setList }) => {
   const [showForm, setShowForm] = useState(false);
   const [idToEdit, setIdToEdit] = useState(0);
 
-  const deleteRecord = (id) => {
-    handleCUDsubmit("book", "DELETE", id, list, setList);
+  const deleteRecord = async (id) => {
+    const record = list.find((x) => x.id == id);
+    if (!record) {
+      return;
+    }
+    if (!confirm(`Are you sure to delete the “${record.title}” record?`)) {
+      return;
+    }
+    alert(await handleC_UDsubmit("author", "DELETE", id, list, setList));
   };
 
   return (

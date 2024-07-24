@@ -49,7 +49,7 @@ export const getURL = (endpoint, order, query) => {
   return URL;
 };
 
-export const handleCUDsubmit = async (
+export const handleC_UDsubmit = async (
   formType,
   method,
   id,
@@ -87,7 +87,7 @@ export const handleCUDsubmit = async (
   }
   const { data, error } = await performCRUD(token, url, method, body);
   if (error) {
-    return "Request to database was not successful.\n" + error.message;
+    return "Request to database was not successful :( \nERROR" + error.message;
   }
   const index = list.findIndex((x) => x.id == id);
   switch (method) {
@@ -95,13 +95,15 @@ export const handleCUDsubmit = async (
       setList([data, ...list]);
       break;
     case "PUT":
+      console.log([...list.slice(0, index), data, ...list.slice(index + 1)]);
       setList([...list.slice(0, index), data, ...list.slice(index + 1)]);
       break;
     case "DELETE":
+      console.log([...list.slice(0, index), ...list.slice(index + 1)]);
       setList([...list.slice(0, index), ...list.slice(index + 1)]);
       break;
   }
-  return "The data on the server was successfully changed";
+  return "The data on the server was changed :)";
 };
 
 async function performCRUD(token, url, method, body) {
@@ -120,7 +122,9 @@ async function performCRUD(token, url, method, body) {
         "Content-type": "application/json",
       },
     });
-    data = await res.json();
+    if (method !== "DELETE") {
+      data = await res.json();
+    }
 
     if (!res.ok) {
       throw new Error("Response not Ok.");
@@ -134,16 +138,3 @@ async function performCRUD(token, url, method, body) {
 
   return { data, error };
 }
-
-export const handleAddEditSubmit = (e, method, list, setList, hideModal) => {
-  const form = e.target;
-  handleCUDsubmit(
-    form.id,
-    method,
-    form.elements["ID"].value,
-    list,
-    setList,
-    new FormData(form),
-    hideModal,
-  );
-};

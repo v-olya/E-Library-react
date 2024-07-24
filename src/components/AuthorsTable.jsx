@@ -6,15 +6,26 @@ import { Add } from "./actions/Add";
 import { Edit } from "./actions/Edit";
 import { Delete } from "./actions/Delete";
 import { AuthorForm } from "./AuthorForm";
-import { handleCUDsubmit } from "../helpers/functions.js";
+import { handleC_UDsubmit } from "../helpers/functions.js";
 import { URL } from "../helpers/constants.js";
 
 export const AuthorsTable = ({ list, setList }) => {
   const [showForm, setShowForm] = useState(false);
   const [idToEdit, setIdToEdit] = useState(0);
 
-  const deleteRecord = (id) => {
-    handleCUDsubmit("author", "DELETE", id, list, setList);
+  const deleteRecord = async (id) => {
+    const record = list.find((x) => x.id == id);
+    if (!record) {
+      return;
+    }
+    if (
+      !confirm(
+        `Are you sure to delete the “${record.first_name} ${record.last_name}” record?`,
+      )
+    ) {
+      return;
+    }
+    alert(await handleC_UDsubmit("author", "DELETE", id, list, setList));
   };
   // Books are needed to provide details on author:  booksOf[author_id]
   let booksOf = {};
