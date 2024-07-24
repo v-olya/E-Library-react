@@ -16,7 +16,7 @@ export function App() {
                 <Route path="/login" element={<Page type="Login" />} />
               </Route>
               <Route element={<UserRoute />}>
-                <Route path="/" element={<Page type="Home" />} />
+                <Route path="/" element={<Page type="HomePage" />} />
               </Route>
             </Routes>
           </AuthProvider>

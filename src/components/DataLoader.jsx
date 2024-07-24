@@ -7,11 +7,11 @@ import { BooksTable } from "./BooksTable";
 import { URL } from "../helpers/constants.js";
 import PropTypes from "prop-types";
 
-export const List = ({ tableType, order, query }) => {
+export const DataLoader = ({ tableType, orderBy, query }) => {
   const res = useFetchToGETdata(
     `${URL}/api/${tableType}/`,
     false,
-    order,
+    orderBy,
     query,
   );
 
@@ -52,8 +52,8 @@ export const List = ({ tableType, order, query }) => {
   );
 };
 
-List.propTypes = {
-  order: PropTypes.string,
+DataLoader.propTypes = {
+  tableType: PropTypes.oneOf(["authors", "books"]).isRequired,
+  orderBy: PropTypes.string,
   query: PropTypes.string,
-  tableType: PropTypes.string.isRequired,
 };

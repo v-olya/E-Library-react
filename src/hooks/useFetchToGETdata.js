@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useAuthentification } from "../providers/AuthProvider";
 import { getURL } from "../helpers/functions.js";
 
-export const useFetchToGETdata = (url, chache, order, query) => {
+export const useFetchToGETdata = (url, cacheable, order, query) => {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -30,7 +30,7 @@ export const useFetchToGETdata = (url, chache, order, query) => {
         if (json && !Array.isArray(json)) {
           throw new Error("Server has not returned the list of items");
         }
-        if (cache) {
+        if (cacheable) {
           if (cache.current[url]) {
             setData(cache.current[url]);
           } else {
@@ -56,7 +56,7 @@ export const useFetchToGETdata = (url, chache, order, query) => {
       setError(null);
       setData([]);
     };
-  }, [url, chache, order, query]);
+  }, [url, cacheable, order, query]);
 
   return { data, error, loading };
 };

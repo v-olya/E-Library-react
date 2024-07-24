@@ -1,9 +1,9 @@
 import PropTypes from "prop-types";
 import { Header } from "../Header";
 import { Login } from "../Login";
-import { Home } from "../Home";
+import { TableSwitcher } from "../TableSwitcher";
 
-const layouts = { Login: <Login />, Home: <Home /> };
+const layouts = { Login: <Login />, HomePage: <TableSwitcher /> };
 
 export const Page = ({ type }) => {
   return (
@@ -15,5 +15,5 @@ export const Page = ({ type }) => {
 };
 
 Page.propTypes = {
-  type: PropTypes.string.isRequired,
+  type: PropTypes.oneOf(["Login", "HomePage"]),
 };

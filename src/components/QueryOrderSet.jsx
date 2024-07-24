@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { List } from "./List";
+import { DataLoader } from "./DataLoader";
+import PropTypes from "prop-types";
+
 import { titleRegEx, nameRegEx } from "../helpers/constants.js";
 
-export const Home = () => {
-  const [tableType, setTableType] = useState("authors");
+export const QueryOrderSet = ({ tableType }) => {
   const [orderBy, setOrderBy] = useState("id");
   const [query, setQuery] = useState("");
 
@@ -22,26 +23,9 @@ export const Home = () => {
     e.preventDefault();
     setQuery(e.target.query.value);
   };
-  const handleTableSwitch = (e) => {
-    setQuery("");
-    setOrderBy("id");
-    document.forms.search.reset();
-    setTableType(e.target.value.trim());
-  };
+
   return (
     <>
-      <label htmlFor="selectedTable" className="txt-c">
-        Exploring&nbsp;&nbsp;&nbsp;
-        <select
-          id="selectedTable"
-          name="selectedTable"
-          defaultValue={tableType}
-          onChange={handleTableSwitch}
-        >
-          <option value="authors">authors</option>
-          <option value="books">books</option>
-        </select>
-      </label>
       <form id="search" name="search" className="txt-c" onSubmit={handleSearch}>
         <input
           id="query"
@@ -65,7 +49,9 @@ export const Home = () => {
             id="order"
             name="order"
             defaultValue="id"
-            onChange={(e) => setOrderBy(e.target.value)}
+            onChange={(e) => {
+              setOrderBy(e.target.value);
+            }}
           >
             <option value="id" key="0">
               default
@@ -79,7 +65,11 @@ export const Home = () => {
         </label>
       </form>
 
-      <List order={orderBy} query={query} tableType={tableType} />
+      <DataLoader orderBy={orderBy} query={query} tableType={tableType} />
     </>
   );
+};
+
+QueryOrderSet.propTypes = {
+  tableType: PropTypes.oneOf(["authors", "books"]).isRequired,
 };
