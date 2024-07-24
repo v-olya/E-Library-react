@@ -7,34 +7,37 @@ import { BooksTable } from "./BooksTable";
 import { URL } from "../helpers/constants.js";
 import PropTypes from "prop-types";
 
-export const DataLoader = ({ tableType, orderBy, query }) => {
+export const DataTable = ({ tableType, orderBy, query }) => {
   const res = useFetchToGETdata(
     `${URL}/api/${tableType}/`,
     false,
     orderBy,
     query,
   );
-
   const [result, setResult] = useState({});
-  const [prevData, setPrevData] = useState(res.data);
-  const [prevError, setPrevError] = useState(res.error);
-  const [prevLoading, setPrevLoading] = useState(res.loading);
+  const [prevData, setPrevData] = useState([]);
+  const [prevError, setPrevError] = useState(null);
+  const [prevLoading, setPrevLoading] = useState(false);
 
-  if (res.data !== prevData) {
+  if (prevData !== res.data) {
     setPrevData(res.data);
-    setResult(res);
   }
-  if (res.error !== prevError) {
+  if (prevError !== res.error) {
     setPrevError(res.error);
-    setResult(res);
   }
-  if (res.loading !== prevLoading) {
+  if (prevLoading !== res.loading) {
     setPrevLoading(res.loading);
+  }
+  if (
+    prevData !== res.data ||
+    prevError !== res.error ||
+    prevLoading !== res.loading
+  ) {
     setResult(res);
   }
-  const setList = (data) => setResult({ ...result, data });
 
   const { error, data, loading } = result;
+  const setList = (data) => setResult({ ...result, data });
 
   return error ? (
     <h3 className="danger txt-c">{error.message}</h3>
@@ -52,7 +55,7 @@ export const DataLoader = ({ tableType, orderBy, query }) => {
   );
 };
 
-DataLoader.propTypes = {
+DataTable.propTypes = {
   tableType: PropTypes.oneOf(["authors", "books"]).isRequired,
   orderBy: PropTypes.string,
   query: PropTypes.string,

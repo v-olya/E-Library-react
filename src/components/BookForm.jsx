@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { dateRegEx, titleRegEx } from "../helpers/constants.js";
 import { handleC_UDsubmit } from "../helpers/functions.js";
 
-const BookForm = ({ id, list, setList, hideModal }) => {
+const BookForm = ({ id, list, refetcher, hideModal }) => {
   const method = id ? "PUT" : "POST";
   const record = id ? list.find((x) => x.id == id) : {};
   const [submitting, setSubmitting] = useState("");
@@ -18,7 +18,7 @@ const BookForm = ({ id, list, setList, hideModal }) => {
       method,
       form.elements["ID"].value,
       list,
-      setList,
+      refetcher,
       new FormData(form),
     );
     if (m) {
@@ -129,5 +129,5 @@ BookForm.propTypes = {
       ),
     }),
   ).isRequired,
-  setList: PropTypes.func.isRequired,
+  refetcher: PropTypes.func.isRequired,
 };

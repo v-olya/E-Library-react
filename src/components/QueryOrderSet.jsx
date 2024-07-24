@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DataLoader } from "./DataLoader";
+import { DataTable } from "./DataTable";
 import PropTypes from "prop-types";
 
 import { titleRegEx, nameRegEx } from "../helpers/constants.js";
@@ -65,7 +65,7 @@ export const QueryOrderSet = ({ tableType }) => {
         </label>
       </form>
 
-      <DataLoader orderBy={orderBy} query={query} tableType={tableType} />
+      <DataTable orderBy={orderBy} query={query} tableType={tableType} />
     </>
   );
 };
