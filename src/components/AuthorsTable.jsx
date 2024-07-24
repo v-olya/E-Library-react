@@ -1,11 +1,11 @@
-import { useState, lazy } from "react";
+import { useState, lazy, Suspense } from "react";
 import { useFetchToGETdata } from "../hooks/useFetchToGETdata";
 import PropTypes from "prop-types";
 
 import { Add } from "./actions/Add";
 import { Edit } from "./actions/Edit";
 import { Delete } from "./actions/Delete";
-import { handleC_UDsubmit } from "../helpers/functions.js";
+import { handleC_UDrequest } from "../helpers/functions.js";
 import { URL } from "../helpers/constants.js";
 
 export const AuthorsTable = ({ list, setList }) => {
@@ -20,12 +20,12 @@ export const AuthorsTable = ({ list, setList }) => {
     }
     if (
       !confirm(
-        `Are you sure to delete the “${record.first_name} ${record.last_name}” record?`,
+        `Are you sure to delete the “${record.first_name} ${record.last_name}” record? ${booksOf[record.id] ? "\n\nWe have books by that author!" : ""}`,
       )
     ) {
       return;
     }
-    alert(await handleC_UDsubmit("author", "DELETE", id, list, setList));
+    alert(await handleC_UDrequest("author", "DELETE", id, list, setList));
   };
   // Books are needed to provide details on author:  booksOf[author_id]
   let booksOf = {};
@@ -48,10 +48,11 @@ export const AuthorsTable = ({ list, setList }) => {
       <table className="txt-c">
         <thead>
           <tr>
+            <th width="30">id</th>
             <th>First name</th>
             <th>Last name</th>
             <th>Date of birth</th>
-            <th width="200">Details (not editable)</th>
+            <th>Details (not editable)</th>
             <th width="100">
               <Add
                 onClick={() => {
@@ -66,6 +67,7 @@ export const AuthorsTable = ({ list, setList }) => {
           {!!list?.length &&
             list.map((author) => (
               <tr key={author.id}>
+                <td>{author.id}</td>
                 <td>{author.first_name}</td>
                 <td>{author.last_name}</td>
                 <td>{new Date(author.birth_date).toLocaleDateString()}</td>
@@ -94,12 +96,14 @@ export const AuthorsTable = ({ list, setList }) => {
         </tbody>
       </table>
       {showForm && (
-        <AuthorForm
-          id={idToEdit}
-          hideModal={() => setShowForm(false)}
-          list={list}
-          setList={setList}
-        />
+        <Suspense fallback="">
+          <AuthorForm
+            id={idToEdit}
+            hideModal={() => setShowForm(false)}
+            list={list}
+            setList={setList}
+          />
+        </Suspense>
       )}
     </>
   );
