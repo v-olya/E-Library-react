@@ -155,6 +155,9 @@ h1::after {
 .no-wrap {
 	white-space: nowrap;
 }
+.button-wrapper {
+	padding-left: 10px;
+}
 .rounded {
 	margin: 5px;
 	border-radius: 50%;
@@ -162,8 +165,11 @@ h1::after {
 	background: #fff;
 	box-shadow: 0 2px 3px #aaa;
 }
-.button-wrapper {
-	padding-left: 10px;
+.rounded.edit:hover {
+	background: #85ad83;
+}
+.rounded.delete:hover {
+	background: #e54242;
 }
 .danger {
 	font-weight: bold;

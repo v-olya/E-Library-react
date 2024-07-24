@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 
 export const Delete = ({ onClick }) => {
   return (
-    <button className="rounded" onClick={onClick}>
+    <button className="rounded delete" onClick={onClick}>
       <svg
         viewBox="0 0 24 24"
         fill="none"

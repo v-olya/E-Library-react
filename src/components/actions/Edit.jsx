@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 
 export const Edit = ({ onClick }) => {
   return (
-    <button className="rounded" onClick={onClick}>
+    <button className="rounded edit" onClick={onClick}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="-25 -25 150 150"
