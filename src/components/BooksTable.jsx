@@ -1,15 +1,15 @@
-import { useState } from "react";
+import { useState, lazy } from "react";
 import PropTypes from "prop-types";
 
 import { Add } from "./actions/Add";
 import { Edit } from "./actions/Edit";
 import { Delete } from "./actions/Delete";
-import { BookForm } from "./BookForm";
 import { handleC_UDsubmit } from "../helpers/functions.js";
 
 export const BooksTable = ({ list, setList }) => {
   const [showForm, setShowForm] = useState(false);
   const [idToEdit, setIdToEdit] = useState(0);
+  const BookForm = lazy(() => import("./BookForm"));
 
   const deleteRecord = async (id) => {
     const record = list.find((x) => x.id == id);

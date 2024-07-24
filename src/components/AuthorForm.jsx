@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { dateRegEx, nameRegEx } from "../helpers/constants.js";
 import { handleC_UDsubmit } from "../helpers/functions.js";
 
-export const AuthorForm = ({ id, list, setList, hideModal }) => {
+const AuthorForm = ({ id, list, setList, hideModal }) => {
   const method = id ? "PUT" : "POST";
   const record = id ? list.find((x) => x.id == id) : {};
   const [submitting, setSubmitting] = useState(false);
@@ -91,6 +91,8 @@ export const AuthorForm = ({ id, list, setList, hideModal }) => {
     </div>
   );
 };
+
+export default AuthorForm;
 
 AuthorForm.propTypes = {
   id: PropTypes.number.isRequired,

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { dateRegEx, titleRegEx } from "../helpers/constants.js";
 import { handleC_UDsubmit } from "../helpers/functions.js";
 
-export const BookForm = ({ id, list, setList, hideModal }) => {
+const BookForm = ({ id, list, setList, hideModal }) => {
   const method = id ? "PUT" : "POST";
   const record = id ? list.find((x) => x.id == id) : {};
   const [submitting, setSubmitting] = useState("");
@@ -112,6 +112,8 @@ export const BookForm = ({ id, list, setList, hideModal }) => {
     </div>
   );
 };
+
+export default BookForm;
 
 BookForm.propTypes = {
   id: PropTypes.number.isRequired,

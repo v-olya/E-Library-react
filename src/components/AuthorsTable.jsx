@@ -1,17 +1,17 @@
-import { useState } from "react";
+import { useState, lazy } from "react";
 import { useFetchToGETdata } from "../hooks/useFetchToGETdata";
 import PropTypes from "prop-types";
 
 import { Add } from "./actions/Add";
 import { Edit } from "./actions/Edit";
 import { Delete } from "./actions/Delete";
-import { AuthorForm } from "./AuthorForm";
 import { handleC_UDsubmit } from "../helpers/functions.js";
 import { URL } from "../helpers/constants.js";
 
 export const AuthorsTable = ({ list, setList }) => {
   const [showForm, setShowForm] = useState(false);
   const [idToEdit, setIdToEdit] = useState(0);
+  const AuthorForm = lazy(() => import("./AuthorForm"));
 
   const deleteRecord = async (id) => {
     const record = list.find((x) => x.id == id);
