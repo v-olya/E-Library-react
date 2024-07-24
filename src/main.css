@@ -81,6 +81,7 @@ ul[role=navigation] {
 main {
 	width: 60%;
 	min-width: 360px;
+	max-width: 960px;
 	margin: auto;
 }
 details {
