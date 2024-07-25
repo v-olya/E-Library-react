@@ -56,7 +56,7 @@ export const Login = () => {
           aria-describedby="user-password"
           minLength={chars * 2}
           maxLength={chars * 4}
-          title="At least one uppercase, one lowercase letter, one number and one special character"
+          title="At least one uppercase or lowercase letter, one number and one special character"
           pattern={passwordRegEx}
           placeholder=" "
           onChange={handleInput}
