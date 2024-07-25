@@ -22,9 +22,15 @@ export const AuthorsTable = ({ list, setList }) => {
     ) {
       return;
     }
-    alert(
-      await handleC_UDrequest("author", "DELETE", record.id, list, setList),
+    const { error, info } = await handleC_UDrequest(
+      "author",
+      "DELETE",
+      record.id,
     );
+    if (!error) {
+      setList([...list.slice(0, index), ...list.slice(index + 1)]);
+    }
+    alert(info);
   };
   // Books are needed to provide details on author:  booksOf[author_id]
   let booksOf = {};

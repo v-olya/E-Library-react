@@ -8,6 +8,7 @@ const BookForm = ({ index, list, setList, hideModal }) => {
   const record = index >= 0 ? list[index] : {};
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState("");
+  const [error, setError] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,17 +22,23 @@ const BookForm = ({ index, list, setList, hideModal }) => {
       requestBody[key] =
         key == "author_ids" ? val.split(",").map((x) => +x) : val;
     }
-    const m = await handleC_UDrequest(
+    const { data, error, info } = await handleC_UDrequest(
       form.id,
       method,
       form.elements["ID"].value,
-      list,
-      setList,
       requestBody,
     );
-    if (m) {
-      setMessage(m);
+    if (!error && data) {
+      document.getElementById("hideModal").addEventListener("click", () => {
+        setList(
+          method == "POST"
+            ? [data, ...list]
+            : [...list.slice(0, index), data, ...list.slice(index + 1)],
+        );
+      });
     }
+    setError(error);
+    setMessage(info);
   };
 
   const author_ids = record.authors
@@ -45,10 +52,14 @@ const BookForm = ({ index, list, setList, hideModal }) => {
     <div className="modal-background">
       <form id="book" name="book" className="modal" onSubmit={handleSubmit}>
         <h3 className="txt-c">
-          {index >= 0 ? `Editing the book with DB id=${record.id}` : "Add a new book"}
+          {index >= 0
+            ? `Editing the book with DB id=${record.id}`
+            : "Add a new book"}
         </h3>
-        <h4 className="danger txt-c">{submitting && message}&nbsp;</h4>
-        <b className="close" onClick={hideModal}>
+        <h4 className={`${error ? "danger" : "ok"} txt-c`}>
+          {submitting && message}&nbsp;
+        </h4>
+        <b id="hideModal" className="close" onClick={hideModal}>
           &#10006;
         </b>
         <div className="field">

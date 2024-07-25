@@ -16,9 +16,15 @@ export const BooksTable = ({ list, setList }) => {
     if (!confirm(`Are you sure to delete the “${record.title}”?`)) {
       return;
     }
-    alert(
-      await handleC_UDrequest("book", "DELETE", record.id, list, setList),
+    const { error, info } = await handleC_UDrequest(
+      "book",
+      "DELETE",
+      record.id,
     );
+    if (!error) {
+      setList([...list.slice(0, index), ...list.slice(index + 1)]);
+    }
+    alert(info);
   };
 
   return (

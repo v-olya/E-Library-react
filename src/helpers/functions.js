@@ -49,21 +49,12 @@ export const getURL = (endpoint, order, query) => {
   return URL;
 };
 
-export const handleC_UDsubmit = async (
-  formType,
-  method,
-  id,
-  list,
-  setList,
-  formData,
-) => {
+export const handleC_UDrequest = async (formType, method, id, formData) => {
   const rules = [
     ["POST", "PUT", "DELETE"].includes(method),
     ["author", "book"].includes(formType),
     typeof +id === "number",
-    Array.isArray(list),
-    typeof setList == "function",
-    formData && formData instanceof FormData,
+    !formData || typeof formData == "object",
   ];
   const failedTests = rules.map((x, i) => (!x ? i + 1 : 0)).filter((x) => x);
 
@@ -81,29 +72,18 @@ export const handleC_UDsubmit = async (
 
   const url = `${URL}/api/${formType}s${id ? "/" + id : ""}/`;
 
-  const body = {};
-  if (formData) {
+  let body = {};
+  if (formData instanceof FormData) {
     formData.forEach((value, key) => (body[key] = value));
+  } else {
+    body = formData;
   }
   const { data, error } = await performCRUD(token, url, method, body);
   if (error) {
-    return "Request to database was not successful :( \nERROR" + error.message;
+    return { data, error, info: "An attempt failed. " + error.message,
+    };
   }
-  const index = list.findIndex((x) => x.id == id);
-  switch (method) {
-    case "POST":
-      setList([data, ...list]);
-      break;
-    case "PUT":
-      console.log([...list.slice(0, index), data, ...list.slice(index + 1)]);
-      setList([...list.slice(0, index), data, ...list.slice(index + 1)]);
-      break;
-    case "DELETE":
-      console.log([...list.slice(0, index), ...list.slice(index + 1)]);
-      setList([...list.slice(0, index), ...list.slice(index + 1)]);
-      break;
-  }
-  return "The data on the server was changed :)";
+  return { data, error, info: "Data on the server has been changed!" };
 };
 
 async function performCRUD(token, url, method, body) {
