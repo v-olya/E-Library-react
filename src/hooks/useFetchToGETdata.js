@@ -1,12 +1,14 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useAuthentification } from "../providers/AuthProvider";
 import { getURL } from "../helpers/functions.js";
+
+//Assign cacheable=true when we download the "books" collection as an auxiliary for the default AuthorsTable. 
+//If the user has switched to BooksTable, we remove the cache, since the "books" can be modified.
 
 export const useFetchToGETdata = (url, cacheable, order, query) => {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const cache = useRef({});
 
   const user = useAuthentification();
 
@@ -14,9 +16,9 @@ export const useFetchToGETdata = (url, cacheable, order, query) => {
     const controller = new AbortController();
     const signal = controller.signal;
     const fetchData = async () => {
+      setLoading(true);
       let res = { status: "Error" };
       try {
-        setLoading(true);
         res = await fetch(getURL(url, order, query), {
           signal,
           headers: {
@@ -30,15 +32,9 @@ export const useFetchToGETdata = (url, cacheable, order, query) => {
         if (json && !Array.isArray(json)) {
           throw new Error("Server has not returned the list of items");
         }
+        setData(json);
         if (cacheable) {
-          if (cache.current[url]) {
-            setData(cache.current[url]);
-          } else {
-            cache.current[url] = json;
-            setData(json);
-          }
-        } else {
-          setData(json);
+          sessionStorage.setItem(url, JSON.stringify(json));
         }
       } catch (err) {
         if (err.name === "AbortError") {
@@ -50,7 +46,21 @@ export const useFetchToGETdata = (url, cacheable, order, query) => {
         setLoading(false);
       }
     };
-    fetchData();
+    
+    if (cacheable) {
+      const cache = sessionStorage.getItem(url);
+      if (cache) {
+        setData(JSON.parse(cache));
+      } else {
+        fetchData();
+      }
+    } 
+    if (!cacheable) {
+      if (new URL(url).pathname="/api/books/") {
+        sessionStorage.removeItem(url);
+      }
+      fetchData(); 
+    }
     return () => {
       controller.abort();
       setError(null);
