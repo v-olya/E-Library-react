@@ -10,14 +10,11 @@ import { URL } from "../helpers/constants.js";
 
 export const AuthorsTable = ({ list, setList }) => {
   const [showForm, setShowForm] = useState(false);
-  const [idToEdit, setIdToEdit] = useState(0);
+  const [indexToEdit, setIndexToEdit] = useState(-1);
   const AuthorForm = lazy(() => import("./AuthorForm"));
 
-  const deleteRecord = async (id) => {
-    const record = list.find((x) => x.id == id);
-    if (!record) {
-      return;
-    }
+  const deleteRecord = async (index) => {
+    const record = list[index];
     if (
       !confirm(
         `Are you sure to delete the “${record.first_name} ${record.last_name}” record? ${booksOf[record.id] ? "\n\nWe have books by that author!" : ""}`,
@@ -25,7 +22,9 @@ export const AuthorsTable = ({ list, setList }) => {
     ) {
       return;
     }
-    alert(await handleC_UDrequest("author", "DELETE", id, list, setList));
+    alert(
+      await handleC_UDrequest("author", "DELETE", record.id, list, setList),
+    );
   };
   // Books are needed to provide details on author:  booksOf[author_id]
   let booksOf = {};
@@ -48,15 +47,15 @@ export const AuthorsTable = ({ list, setList }) => {
       <table className="txt-c">
         <thead>
           <tr>
-            <th width="30">id</th>
             <th>First name</th>
             <th>Last name</th>
             <th>Date of birth</th>
             <th>Details (not editable)</th>
+            <th width="40">db id</th>
             <th width="100">
               <Add
                 onClick={() => {
-                  setIdToEdit(0);
+                  setIndexToEdit(-1);
                   setShowForm(true);
                 }}
               />
@@ -65,9 +64,8 @@ export const AuthorsTable = ({ list, setList }) => {
         </thead>
         <tbody>
           {!!list?.length &&
-            list.map((author) => (
+            list.map((author, index) => (
               <tr key={author.id}>
-                <td>{author.id}</td>
                 <td>{author.first_name}</td>
                 <td>{author.last_name}</td>
                 <td>{new Date(author.birth_date).toLocaleDateString()}</td>
@@ -82,14 +80,15 @@ export const AuthorsTable = ({ list, setList }) => {
                       : ""}
                   </details>
                 </td>
+                <td>{author.id}</td>
                 <td className="no-wrap">
                   <Edit
                     onClick={() => {
-                      setIdToEdit(author.id);
+                      setIndexToEdit(index);
                       setShowForm(true);
                     }}
                   />
-                  <Delete onClick={() => deleteRecord(author.id)} />
+                  <Delete onClick={() => deleteRecord(index)} />
                 </td>
               </tr>
             ))}
@@ -98,7 +97,7 @@ export const AuthorsTable = ({ list, setList }) => {
       {showForm && (
         <Suspense fallback="">
           <AuthorForm
-            id={idToEdit}
+            index={indexToEdit}
             hideModal={() => setShowForm(false)}
             list={list}
             setList={setList}

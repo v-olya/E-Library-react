@@ -1,25 +1,24 @@
-import { useState, lazy } from "react";
+import { useState, lazy, Suspense } from "react";
 import PropTypes from "prop-types";
 
 import { Add } from "./actions/Add";
 import { Edit } from "./actions/Edit";
 import { Delete } from "./actions/Delete";
-import { handleC_UDsubmit } from "../helpers/functions.js";
+import { handleC_UDrequest } from "../helpers/functions.js";
 
 export const BooksTable = ({ list, setList }) => {
   const [showForm, setShowForm] = useState(false);
-  const [idToEdit, setIdToEdit] = useState(0);
+  const [indexToEdit, setIndexToEdit] = useState(-1);
   const BookForm = lazy(() => import("./BookForm"));
 
-  const deleteRecord = async (id) => {
-    const record = list.find((x) => x.id == id);
-    if (!record) {
+  const deleteRecord = async (index) => {
+    const record = list[index];
+    if (!confirm(`Are you sure to delete the “${record.title}”?`)) {
       return;
     }
-    if (!confirm(`Are you sure to delete the “${record.title}” record?`)) {
-      return;
-    }
-    alert(await handleC_UDsubmit("author", "DELETE", id, list, setList));
+    alert(
+      await handleC_UDrequest("book", "DELETE", record.id, list, setList),
+    );
   };
 
   return (
@@ -27,15 +26,15 @@ export const BooksTable = ({ list, setList }) => {
       <table className="txt-c">
         <thead>
           <tr>
-            <th width="120">Title</th>
+            <th>Title</th>
             <th>Published</th>
             <th>ISBN</th>
             <th>Author(s) ID</th>
-            <th width="200">Details (not editable)</th>
+            <th>Details (not editable)</th>
             <th width="100">
               <Add
                 onClick={() => {
-                  setIdToEdit(0);
+                  setIndexToEdit(-1);
                   setShowForm(true);
                 }}
               />
@@ -44,7 +43,7 @@ export const BooksTable = ({ list, setList }) => {
         </thead>
         <tbody>
           {!!list?.length &&
-            list.map((book) => (
+            list.map((book, index) => (
               <tr key={book.id}>
                 <td>{book.title}</td>
                 <td>{new Date(book.publication_date).toLocaleDateString()}</td>
@@ -70,11 +69,11 @@ export const BooksTable = ({ list, setList }) => {
                 <td className="no-wrap">
                   <Edit
                     onClick={() => {
-                      setIdToEdit(book.id);
+                      setIndexToEdit(index);
                       setShowForm(true);
                     }}
                   />
-                  <Delete onClick={() => deleteRecord(book.id)} />
+                  <Delete onClick={() => deleteRecord(index)} />
                 </td>
               </tr>
             ))}
@@ -82,12 +81,14 @@ export const BooksTable = ({ list, setList }) => {
       </table>
 
       {showForm && (
-        <BookForm
-          id={idToEdit}
-          hideModal={() => setShowForm(false)}
-          list={list}
-          setList={setList}
-        />
+        <Suspense fallback="">
+          <BookForm
+            index={indexToEdit}
+            hideModal={() => setShowForm(false)}
+            list={list}
+            setList={setList}
+          />
+        </Suspense>
       )}
     </>
   );

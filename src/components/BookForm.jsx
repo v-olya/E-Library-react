@@ -1,25 +1,33 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 import { dateRegEx, titleRegEx } from "../helpers/constants.js";
-import { handleC_UDsubmit } from "../helpers/functions.js";
+import { handleC_UDrequest } from "../helpers/functions.js";
 
-const BookForm = ({ id, list, refetcher, hideModal }) => {
-  const method = id ? "PUT" : "POST";
-  const record = id ? list.find((x) => x.id == id) : {};
-  const [submitting, setSubmitting] = useState("");
+const BookForm = ({ index, list, setList, hideModal }) => {
+  const method = index >= 0 ? "PUT" : "POST";
+  const record = index >= 0 ? list[index] : {};
+  const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!confirm("Please make sure that the authors' ids exist in the DB")) {
+      return;
+    }
     setSubmitting(true);
     const form = e.target;
-    const m = await handleC_UDsubmit(
+    const requestBody = {};
+    for (const [key, val] of new FormData(form).entries()) {
+      requestBody[key] =
+        key == "author_ids" ? val.split(",").map((x) => +x) : val;
+    }
+    const m = await handleC_UDrequest(
       form.id,
       method,
       form.elements["ID"].value,
       list,
-      refetcher,
-      new FormData(form),
+      setList,
+      requestBody,
     );
     if (m) {
       setMessage(m);
@@ -37,7 +45,7 @@ const BookForm = ({ id, list, refetcher, hideModal }) => {
     <div className="modal-background">
       <form id="book" name="book" className="modal" onSubmit={handleSubmit}>
         <h3 className="txt-c">
-          {!id ? "Add a new book" : `Editing item no. ${id}`}
+          {index >= 0 ? `Editing the book with DB id=${record.id}` : "Add a new book"}
         </h3>
         <h4 className="danger txt-c">{submitting && message}&nbsp;</h4>
         <b className="close" onClick={hideModal}>
@@ -94,14 +102,16 @@ const BookForm = ({ id, list, refetcher, hideModal }) => {
             Authors&#39; IDs:
           </label>
           <input
-            id="authors"
+            id="author_ids"
             type="text"
-            name="authors"
+            name="author_ids"
             required
             pattern="^[1-9](\d*)(,[1-9](\d*))*$"
             placeholder="1 or 1,2,3"
             defaultValue={author_ids}
-            onChange={() => setSubmitting(false)}
+            onChange={() => {
+              setSubmitting(false);
+            }}
           />
           <input type="hidden" name="ID" readOnly value={record.id} />
         </div>
@@ -116,7 +126,7 @@ const BookForm = ({ id, list, refetcher, hideModal }) => {
 export default BookForm;
 
 BookForm.propTypes = {
-  id: PropTypes.number.isRequired,
+  index: PropTypes.number.isRequired,
   hideModal: PropTypes.func.isRequired,
   list: PropTypes.arrayOf(
     PropTypes.shape({
@@ -129,5 +139,5 @@ BookForm.propTypes = {
       ),
     }),
   ).isRequired,
-  refetcher: PropTypes.func.isRequired,
+  setList: PropTypes.func.isRequired,
 };

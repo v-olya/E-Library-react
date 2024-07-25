@@ -1,11 +1,11 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 import { dateRegEx, nameRegEx } from "../helpers/constants.js";
-import { handleC_UDsubmit } from "../helpers/functions.js";
+import { handleC_UDrequest } from "../helpers/functions.js";
 
-const AuthorForm = ({ id, list, refetcher, hideModal }) => {
-  const method = id ? "PUT" : "POST";
-  const record = id ? list.find((x) => x.id == id) : {};
+const AuthorForm = ({ index, list, setList, hideModal }) => {
+  const method = index >= 0 ? "PUT" : "POST";
+  const record = index >= 0 ? list[index] : {};
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -13,12 +13,12 @@ const AuthorForm = ({ id, list, refetcher, hideModal }) => {
     e.preventDefault();
     setSubmitting(true);
     const form = e.target;
-    const m = await handleC_UDsubmit(
+    const m = await handleC_UDrequest(
       form.id,
       method,
       form.elements["ID"].value,
       list,
-      refetcher,
+      setList,
       new FormData(form),
     );
     if (m) {
@@ -30,7 +30,7 @@ const AuthorForm = ({ id, list, refetcher, hideModal }) => {
     <div className="modal-background">
       <form id="author" name="author" className="modal" onSubmit={handleSubmit}>
         <h3 className="txt-c">
-          {!id ? "Add an author" : `Editing item no. ${id}`}
+          {index >= 0 ? `Editing the author with DB id=${record.id}` : "Add an author"}
         </h3>
         <h4 className="danger txt-c">{submitting && message}&nbsp;</h4>
         <b className="close" onClick={hideModal}>
@@ -95,7 +95,7 @@ const AuthorForm = ({ id, list, refetcher, hideModal }) => {
 export default AuthorForm;
 
 AuthorForm.propTypes = {
-  id: PropTypes.number.isRequired,
+  index: PropTypes.number.isRequired,
   hideModal: PropTypes.func.isRequired,
   list: PropTypes.arrayOf(
     PropTypes.shape({
@@ -105,5 +105,5 @@ AuthorForm.propTypes = {
       birth_date_date: PropTypes.string,
     }),
   ).isRequired,
-  refetcher: PropTypes.func.isRequired,
+  setList: PropTypes.func.isRequired,
 };
