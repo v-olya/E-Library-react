@@ -1,4 +1,4 @@
-export const Avatar = () => {
+export const UserAvatar = () => {
   return (
     <button id="avatar">
       <svg

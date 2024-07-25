@@ -89,6 +89,11 @@ details {
   border-radius: 4px;
   padding: 0.5em 0.5em 0;
 }
+details[disabled] {
+	pointer-events: none;
+	background-color: #dfdbdb;
+  opacity: .70;
+}
 details[open] {
   padding: 0.5em;
 }
@@ -130,6 +135,8 @@ button:disabled, button:disabled:hover{
 h1 {
 	margin: 36px 0 36px -28px;
 	position: relative;
+}
+h1, .ok {
 	color: #0d4c0b;
 }
 h1::after {
@@ -178,15 +185,17 @@ h1::after {
 }
 #login {	
 	max-width: 400px;
+	margin-top: 50px;
 }
 #login button {
-	margin-top: 24px;
+	margin-top: 36px;
 }
 #logout {
 	width: 82px;
 }
 #logout:hover {
-	background: #cd5144;
+	background: #dd5858;
+	box-shadow: 0 1px 3px #bbb;
 }
 #searchButton {
 	width: 160px;
@@ -197,6 +206,12 @@ h1::after {
 	border-radius: 50%;
 	margin-right: 10px;
   padding-top: 4px;
+}
+#hideModal {
+	margin-top: 4px;
+	padding: 0 4px;
+	border-radius: 2px;
+  box-shadow: 0 2px 3px #333;
 }
 [for=selectedTable] {
 	width: 100%;

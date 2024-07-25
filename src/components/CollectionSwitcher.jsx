@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { QueryOrderSet } from "./QueryOrderSet";
+import { Collection } from "../providers/CollectionContext.js";
+import { GETparamsForm } from "./GETparamsForm";
 
-export const TableSwitcher = () => {
+export const CollectionSwitcher = () => {
   const [tableType, setTableType] = useState("authors");
 
   const handleTableSwitch = (e) => {
@@ -21,8 +22,9 @@ export const TableSwitcher = () => {
           <option value="books">books</option>
         </select>
       </label>
-
-      <QueryOrderSet tableType={tableType} key={tableType} />
+      <Collection.Provider value={tableType}>
+        <GETparamsForm tableType={tableType} key={tableType} />
+      </Collection.Provider>
     </>
   );
 };

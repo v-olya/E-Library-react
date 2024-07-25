@@ -8,7 +8,7 @@ import { Delete } from "./actions/Delete";
 import { handleC_UDrequest } from "../helpers/functions.js";
 import { URL } from "../helpers/constants.js";
 
-export const AuthorsTable = ({ list, setList }) => {
+export const Collection_A = ({ list, setList }) => {
   const [showForm, setShowForm] = useState(false);
   const [indexToEdit, setIndexToEdit] = useState(-1);
   const AuthorForm = lazy(() => import("./AuthorForm"));
@@ -76,11 +76,10 @@ export const AuthorsTable = ({ list, setList }) => {
                 <td>{author.last_name}</td>
                 <td>{new Date(author.birth_date).toLocaleDateString()}</td>
                 <td>
-                  <details>
+                  <details disabled={!booksOf[author.id]}>
                     <summary>Books</summary>
                     {booksOf[author.id]
-                      ? "\n" +
-                        booksOf[author.id]
+                      ? booksOf[author.id]
                           .map((x) => `${x.title} (${x.published})`)
                           .join(",\n")
                       : ""}
@@ -114,7 +113,7 @@ export const AuthorsTable = ({ list, setList }) => {
   );
 };
 
-AuthorsTable.propTypes = {
+Collection_A.propTypes = {
   list: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number,

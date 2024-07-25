@@ -6,7 +6,7 @@ import { Edit } from "./actions/Edit";
 import { Delete } from "./actions/Delete";
 import { handleC_UDrequest } from "../helpers/functions.js";
 
-export const BooksTable = ({ list, setList }) => {
+export const Collection_B = ({ list, setList }) => {
   const [showForm, setShowForm] = useState(false);
   const [indexToEdit, setIndexToEdit] = useState(-1);
   const BookForm = lazy(() => import("./BookForm"));
@@ -63,13 +63,12 @@ export const BooksTable = ({ list, setList }) => {
                 <td>
                   <details>
                     <summary>Author(s)</summary>
-                    {"\n" +
-                      (book.authors || [])
-                        .map(
-                          (author) =>
-                            `${author.first_name} ${author.last_name} (${author.birth_date})`,
-                        )
-                        .join("\n")}
+                    {(book.authors || [])
+                      .map(
+                        (author) =>
+                          `${author.first_name} ${author.last_name} (${author.birth_date})`,
+                      )
+                      .join("\n")}
                   </details>
                 </td>
                 <td className="no-wrap">
@@ -100,7 +99,7 @@ export const BooksTable = ({ list, setList }) => {
   );
 };
 
-BooksTable.propTypes = {
+Collection_B.propTypes = {
   list: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number,

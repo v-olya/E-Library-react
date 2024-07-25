@@ -2,13 +2,13 @@ import { useState, useEffect } from "react";
 import { useAuthentification } from "../providers/AuthProvider";
 import { getURL } from "../helpers/functions.js";
 
-//Assign cacheable=true when we download the "books" collection as an auxiliary for the default AuthorsTable. 
+//cacheable = true when we download Books collection as an auxiliary for the default page Authors.
 //If the user has switched to BooksTable, we remove the cache, since the "books" can be modified.
 
 export const useFetchToGETdata = (url, cacheable, order, query) => {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   const user = useAuthentification();
 
@@ -16,7 +16,6 @@ export const useFetchToGETdata = (url, cacheable, order, query) => {
     const controller = new AbortController();
     const signal = controller.signal;
     const fetchData = async () => {
-      setLoading(true);
       let res = { status: "Error" };
       try {
         res = await fetch(getURL(url, order, query), {
@@ -43,30 +42,32 @@ export const useFetchToGETdata = (url, cacheable, order, query) => {
           setError({ ...err, message: `Status ${res.status}: ${err.message}` });
         }
       } finally {
-        setLoading(false);
+        setLoaded(true);
       }
     };
-    
+
     if (cacheable) {
       const cache = sessionStorage.getItem(url);
       if (cache) {
         setData(JSON.parse(cache));
+        setLoaded(true);
       } else {
         fetchData();
       }
-    } 
+    }
     if (!cacheable) {
-      if (new URL(url).pathname="/api/books/") {
+      if (new URL(url).pathname == "/api/books/") {
         sessionStorage.removeItem(url);
       }
-      fetchData(); 
+      fetchData();
     }
     return () => {
       controller.abort();
       setError(null);
+      setLoaded(false);
       setData([]);
     };
   }, [url, cacheable, order, query]);
 
-  return { data, error, loading };
+  return { data, error, loaded };
 };

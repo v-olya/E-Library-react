@@ -1,10 +1,11 @@
-import { useState } from "react";
-import { DataTable } from "./DataTable";
-import PropTypes from "prop-types";
-
+import { useState, useContext } from "react";
+import { Collection } from "../providers/CollectionContext.js";
+import { DataFetcher } from "./DataFetcher";
 import { titleRegEx, nameRegEx } from "../helpers/constants.js";
 
-export const QueryOrderSet = ({ tableType }) => {
+export const GETparamsForm = () => {
+  const tableType = useContext(Collection);
+
   const [orderBy, setOrderBy] = useState("id");
   const [query, setQuery] = useState("");
 
@@ -65,11 +66,7 @@ export const QueryOrderSet = ({ tableType }) => {
         </label>
       </form>
 
-      <DataTable orderBy={orderBy} query={query} tableType={tableType} />
+      <DataFetcher orderBy={orderBy} query={query} />
     </>
   );
-};
-
-QueryOrderSet.propTypes = {
-  tableType: PropTypes.oneOf(["authors", "books"]).isRequired,
 };

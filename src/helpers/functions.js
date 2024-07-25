@@ -80,8 +80,7 @@ export const handleC_UDrequest = async (formType, method, id, formData) => {
   }
   const { data, error } = await performCRUD(token, url, method, body);
   if (error) {
-    return { data, error, info: "An attempt failed. " + error.message,
-    };
+    return { data, error, info: "An attempt failed. " + error.message };
   }
   return { data, error, info: "Data on the server has been changed!" };
 };

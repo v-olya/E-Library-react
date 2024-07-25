@@ -1,9 +1,9 @@
 import PropTypes from "prop-types";
 import { Header } from "../Header";
 import { Login } from "../Login";
-import { TableSwitcher } from "../TableSwitcher";
+import { CollectionSwitcher } from "../CollectionSwitcher";
 
-const layouts = { Login: <Login />, HomePage: <TableSwitcher /> };
+const layouts = { Login: <Login />, HomePage: <CollectionSwitcher /> };
 
 export const Page = ({ type }) => {
   return (
