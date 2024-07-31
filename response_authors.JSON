@@ -1,0 +1,26 @@
+[
+  {
+    "id": 4,
+    "first_name": "Franz",
+    "last_name": "Kafka",
+    "birth_date": "1883-07-03"
+  },
+  {
+    "id": 6,
+    "first_name": "John",
+    "last_name": "Doe",
+    "birth_date": "1971-01-01"
+  },
+  {
+    "id": 12,
+    "first_name": "Astrid",
+    "last_name": "Lindgren",
+    "birth_date": "1907-11-14"
+  },
+  {
+    "id": 17,
+    "first_name": "Hasn't",
+    "last_name": "WrittenAnybook",
+    "birth_date": "2000-01-01"
+  }
+]
