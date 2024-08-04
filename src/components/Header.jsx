@@ -1,7 +1,8 @@
 import { useAuthentification } from "../providers/AuthProvider";
+import PropTypes from "prop-types";
 import { UserAvatar } from "./UserAvatar";
 
-export const Header = () => {
+export const Header = ({ with_h1 = true }) => {
   const user = useAuthentification();
 
   return (
@@ -18,7 +19,11 @@ export const Header = () => {
           </li>
         </ul>
       )}
-      <h1 className="txt-c">Welcome to our digital library</h1>
+      {with_h1 && <h1 className="txt-c">Welcome to our digital library</h1>}
     </>
   );
+};
+
+Header.propTypes = {
+  with_h1: PropTypes.bool,
 };

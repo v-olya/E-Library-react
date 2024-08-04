@@ -4,7 +4,7 @@ export const Add = ({ onClick }) => {
   return (
     <div className="flex align-c space-around button-wrapper">
       <span>Add&nbsp;&nbsp;</span>
-      <button className="rounded" onClick={onClick}>
+      <button className="rounded add" onClick={onClick}>
         <svg
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
